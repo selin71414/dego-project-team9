@@ -1,5 +1,5 @@
-# DEGO Project - Team X
-# #Team Members
+# DEGO Project - Team 9
+## Team Members
 - Selin Gencer
 - Miguel Xu 56323
 ## Project Description
