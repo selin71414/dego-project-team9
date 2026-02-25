@@ -1,6 +1,7 @@
 # DEGO Project - Team X
-# # Team Members
-- Selin Gencer( add your name here )
+# #Team Members
+- Selin Gencer
+- Miguel Xu 56323
 ## Project Description
 Credit scoring bias analysis for DEGO course .
 ## Structure
