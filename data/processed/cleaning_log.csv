@@ -2,4 +2,4 @@ field,rule,rows_affected
 applicant_info.gender,Normalize M/F/Male/Female to Male/Female; else Unknown,114
 applicant_info.date_of_birth,Parse mixed formats and standardize to YYYY-MM-DD,157
 financials.annual_income,Coerce to numeric,8
-_id,Count extra rows beyond first occurrence for duplicate IDs,2
+_id,Flag duplicate application IDs,4
