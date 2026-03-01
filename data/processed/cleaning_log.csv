@@ -2,4 +2,9 @@ field,rule,rows_affected
 applicant_info.gender,Normalize M/F/Male/Female to Male/Female; else Unknown,114
 applicant_info.date_of_birth,Parse mixed formats and standardize to YYYY-MM-DD,157
 financials.annual_income,Coerce to numeric,8
-_id,Flag duplicate application IDs,4
+flag_duplicate_id,Flag duplicate application IDs,4
+flag_invalid_email,Flag invalid email format records,4
+flag_non_iso_dob_input,Flag non-ISO date of birth inputs before standardization,157
+flag_negative_credit_history,Flag negative credit history months values,2
+flag_dti_gt_1,Flag debt_to_income values greater than 1,1
+flag_negative_savings,Flag negative savings balance values,1
