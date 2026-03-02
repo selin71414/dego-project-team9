@@ -3,9 +3,11 @@ applicant_info.gender,Normalize M/F/Male/Female to Male/Female; else Unknown,114
 applicant_info.date_of_birth,Parse mixed formats and standardize to YYYY-MM-DD,157
 financials.annual_income,Coerce to numeric,8
 flag_duplicate_id,Flag duplicate application IDs,4
+flag_duplicate_ssn,Flag duplicate SSN values (non-empty only),6
 flag_invalid_email,Flag invalid email format records,4
+flag_zero_annual_income,Flag zero annual income values replaced with pd.NA,1
 flag_non_iso_dob_input,Flag non-ISO date of birth inputs before standardization,157
-flag_negative_credit_history,Flag negative credit history months values,2
-flag_dti_gt_1,Flag debt_to_income values greater than 1,1
-flag_negative_savings,Flag negative savings balance values,1
+flag_negative_credit_history,Flag negative credit history months values replaced with pd.NA,2
+flag_dti_gt_1,Flag debt_to_income values greater than 1 replaced with pd.NA,1
+flag_negative_savings,Flag negative savings balance values replaced with pd.NA,1
 flag_future_processing_timestamp,Flag processing timestamps in future vs analysis date,2
