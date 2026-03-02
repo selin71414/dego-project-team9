@@ -2,6 +2,7 @@
 ## Team Members
 - Selin Gencer 71414
 - Miguel Xu 56323
+- Bernardo Baptista 56783
 ## Project Description
 Credit scoring bias analysis for DEGO course .
 ## Structure
