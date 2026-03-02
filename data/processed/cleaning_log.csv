@@ -8,3 +8,4 @@ flag_non_iso_dob_input,Flag non-ISO date of birth inputs before standardization,
 flag_negative_credit_history,Flag negative credit history months values,2
 flag_dti_gt_1,Flag debt_to_income values greater than 1,1
 flag_negative_savings,Flag negative savings balance values,1
+flag_future_processing_timestamp,Flag processing timestamps in future vs analysis date,2

@@ -10,7 +10,8 @@ completeness,applicant_info.zip_code missing/blank,2,0.4
 consistency,applicant_info.date_of_birth non-ISO format,157,31.27
 consistency,applicant_info.gender inconsistent coding,114,22.71
 consistency,financials.annual_income stored as string,8,1.59
-consistency,_id duplicate,2,0.4
+timeliness,processing_timestamp in future vs analysis date,2,0.4
+uniqueness,_id duplicate,2,0.4
 validity,applicant_info.email invalid format,4,0.8
 validity,financials.credit_history_months < 0,2,0.4
 validity,financials.debt_to_income > 1,1,0.2
