@@ -14,59 +14,50 @@ Credit scoring bias analysis for DEGO course .
 ## Week 23-02-2026/28-02-2026
 - Summary: Finished the data quality acessment and started to work on bias detection.
 
-## Data Engineering - Data Quality Pipeline
+## 📊 Data Quality Analysis (DQA)
 
-### Scope
-The Data Engineer built the ingestion, normalization, data-quality audit, and cleaning pipeline for ⁠ raw_credit_applications.json ⁠.
+### Executive Summary
+We audited **502 raw credit application records** from NovaCred’s lending pipeline across five key dimensions: *Completeness, Consistency, Validity, Uniqueness,* and *Timeliness*. After resolving **2 exact duplicate records**, the cleaned dataset contains **500 unique applications**.
 
-### What We Implemented
-1.⁠ ⁠Loaded the nested raw JSON as immutable source data.
-2.⁠ ⁠Flattened data into:
-   - application-level table (one row per application)
-   - spending-level table (one row per spending item)
-3.⁠ ⁠Audited data quality issues across:
-   - completeness
-   - consistency
-   - validity
-4.⁠ ⁠Applied deterministic cleaning rules and added row-level quality flags.
-5.⁠ ⁠Exported cleaned datasets and audit artifacts for downstream bias/privacy analysis.
+> [!IMPORTANT]
+> **34.2% (171 records)** carry at least one quality flag. These records require downstream attention (filtering or manual review) before use in risk modeling. All original values are preserved alongside cleaned fields and audit flags to maintain a 100% verifiable trail.
 
-### Key Findings (from profiling)
-•⁠  ⁠Total records: ⁠ 502 ⁠
-•⁠  ⁠Duplicate IDs(uniqueness): ⁠ 2 ⁠
-• Timeliness: 2
-•⁠  ⁠Missing values:
-  - email  7 ⁠
-  - SSN ⁠ 5 ⁠
-  - IP address ⁠ 5 ⁠
-  - gender ⁠ 3 ⁠
-  - date of birth ⁠ 5 ⁠
-  - ZIP code ⁠ 2 ⁠
-  - annual income ⁠ 5 ⁠
-  - processing timestamp ⁠ 440 ⁠
-•⁠  ⁠Type inconsistencies:
-  - ⁠ annual_income ⁠ stored as string in ⁠ 8 ⁠ rows
-  - ⁠ annual_income ⁠ stored as float in ⁠ 1 ⁠ row
-•⁠  ⁠Format inconsistencies:
-  - non-ISO DOB values: ⁠ 157 ⁠
-  - invalid emails: ⁠ 4 ⁠
-  - inconsistent gender coding (⁠ Male/Female/M/F/blank ⁠)
-•⁠  ⁠Invalid numeric values:
-  - negative credit history months: ⁠ 2 ⁠
-  - debt-to-income ratio > 1: ⁠ 1 ⁠
-  - negative savings balance: ⁠ 1 ⁠
-•⁠  Accuracy:
-  - 66.3% of data is clean (333 rows), while 33.7% requires fixes (169 rows).
+---
 
+### 🔍 Key Findings
 
-### Cleaning Rules Applied
-•⁠  ⁠Gender normalization: ⁠ M/F/Male/Female ⁠ -> ⁠ Male/Female ⁠, others -> ⁠ Unknown ⁠
-•⁠  ⁠DOB normalization: parse mixed formats and standardize to ⁠ YYYY-MM-DD (31.3% of the data required Date of Birth normalization)
-•⁠  ⁠Numeric coercion for income/credit history/DTI/savings
-•⁠  ⁠Quality flags for duplicates and invalid values
+#### **1. Consistency (High Impact)**
+* **Date of Birth:** 31.4% (157 records) stored in non-ISO formats (e.g., DD/MM/YYYY) — standardized to `YYYY-MM-DD` in `date_of_birth_clean`.
+* **Gender Coding:** 22.8% (114 records) used inconsistent coding (M/F vs. Male/Female) — normalized to `Male/Female/Unknown` in `gender_clean`.
+* **Data Types:** 8 income records were stored as strings instead of numeric values — coerced in `annual_income_clean`.
 
-### Outputs
-•⁠  ⁠⁠ data/processed/applications_clean.csv ⁠
-•⁠  ⁠⁠ data/processed/spending_clean.csv ⁠
-•⁠  ⁠⁠ data/processed/data_quality_report.csv ⁠
-•⁠  ⁠⁠ data/processed/cleaning_log.csv ⁠
+#### **2. Completeness (Governance Concern)**
+* **Audit Trail Gap:** `processing_timestamp` is missing in **87.65%** of records. This indicates a lack of a reliable audit trail for historical credit decisions.
+* **PII Missingness:** Minor gaps (~1.0%) identified in Email, SSN, IP Address, DOB, and Annual Income.
+
+#### **3. Uniqueness & Validity (High Risk)**
+* **Identity Fraud Flags:** 4 duplicate SSNs were flagged across different applicants. These were retained for investigation rather than deleted, as they may indicate identity fraud or data entry errors.
+* **Financial Anomalies:** Identified 1 case of zero annual income, 1 Debt-to-Income (DTI) ratio $> 1$, and 1 negative savings balance.
+* **Temporal Logic:** 2 processing timestamps were dated in the future, flagged as unreliable for time-series analysis.
+
+---
+
+### 🛠 Cleaning & Transformation Approach
+Our pipeline follows a **deterministic and non-destructive** methodology:
+1. **Preservation:** Original raw fields are never overwritten.
+2. **Standardization:** Cleaned/formatted values are written to new `*_clean` columns.
+3. **Auditability:** Specific quality issues are recorded in boolean `flag_` columns, allowing downstream analysts to apply context-appropriate filters.
+
+#### **Data Schema Mapping**
+| Feature | Row Count | Grain | Note |
+| :--- | :--- | :--- | :--- |
+| **Applications** | 500 | Applicant | Unique records after deduplication. |
+| **Spending** | 827 | Transaction | Flattened "one-to-many" spending behavior records. |
+
+---
+
+### 📂 Pipeline Outputs
+* `applications_clean.csv`: The primary cleaned dataset (500 rows).
+* `spending_clean.csv`: Flattened spending history for granular analysis (827 rows).
+* `data_quality_report.csv`: Row-level summary of all flags triggered.
+* `cleaning_log.csv`: Technical log of every transformation applied.
