@@ -10,6 +10,7 @@ completeness,applicant_info.zip_code missing/blank,2,0.4
 consistency,applicant_info.date_of_birth non-ISO format,157,31.27
 consistency,applicant_info.gender inconsistent coding,114,22.71
 consistency,financials.annual_income stored as string,8,1.59
+consistency,credit history implies start before age 18,1,0.2
 timeliness,processing_timestamp in future vs analysis date,2,0.4
 uniqueness,applicant_info.ssn duplicate,6,1.2
 uniqueness,_id duplicate,2,0.4
