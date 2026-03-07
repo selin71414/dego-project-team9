@@ -42,7 +42,7 @@ dego-project-team9/
 │   ├── 01-data-quality.ipynb
 │   ├── 02-bias-analysis.ipynb
 │   └── 03-privacy-demo.ipynb
-├── presentation/    
+└── presentation/
 
 
 ## Team & Roles 
