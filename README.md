@@ -161,18 +161,18 @@ All 500 final records are retained. Rather than silently dropping rows, original
 
 > **Notebook:** `02-bias-analysis.ipynb`
 
-### 1. Gender Disparate Impact
+### Gender Disparate Impact
 
 | Group | Approval Rate |
 |-------|--------------|
 | Male | ~66% |
 | Female | ~51% |
 
-**Disparate Impact Ratio = 0.51 / 0.66 ≈ 0.77 → FAIL**
+**Disparate Impact Ratio = 0.7667 → FAIL**
 
 A DI ratio of 0.77 falls below the 0.8 threshold of the four-fifths rule, indicating potential disparate impact against female applicants. A chi-square test confirmed this gap is **statistically significant (p < 0.05)**.
 
-### 2. Age-Based Discrimination Patterns
+### Age-Based Discrimination Patterns
 
 | Age Group | Approval Rate |
 |-----------|--------------|
@@ -182,19 +182,32 @@ A DI ratio of 0.77 falls below the 0.8 threshold of the four-fifths rule, indica
 | 46–55 | Above average |
 | 56–65 | Above average |
 
-The most pronounced gap occurs between the 26–35 and 36–45 groups. Using 35 as the cutoff, the approval rate jumps from ~52% (≤35) to ~68% (>35). The age DI ratio passes the four-fifths rule, but a chi-square test confirmed the relationship is **statistically significant**, meaning it needs active monitoring.
+The most pronounced gap occurs between the 26–35 and 36–45 groups. Using 35 as the cutoff, the approval rate jumps from ~52% (≤35) to ~68% (>35). The age **DI ratio = 0.753 → FAIL** (below the 0.8 threshold), and a chi-square test confirmed the gap is **statistically significant (p = 0.0006)**, providing strong evidence of age-based discrimination against applicants aged 35 and under.
 
-### 3. Proxy Variable Analysis
+### Proxy Variable Analysis
 
-**Gender proxies:** T-tests revealed statistically significant gaps (p < 0.05) in **income** and **credit history months** between male and female applicants. Since the model relies on these variables, gender disadvantage may be reproduced indirectly even if gender itself is excluded as a feature.
+**Gender proxies:** T-tests found **no statistically significant difference** in income, credit history, debt-to-income, or savings between male and female applicants (all p > 0.05). This means financial variables are **not acting as gender proxies** which means that men and women in this dataset have similar financial profiles on average. This is a critical finding: the gender gap in approval rates **cannot be explained by financial differences**, which strengthens the case for **direct gender bias** in the model.
 
 **Age proxies:** Pearson correlations showed that **income**, **credit history**, and **savings balance** all correlate meaningfully with age (|r| > 0.2, p < 0.05). These variables likely act as proxies for age in the model.
 
-### 4. Interaction Effects
+### Interaction Effects
 
-A gender × age group approval rate matrix revealed that the lowest approval rates are concentrated among **young female applicants (18–35)**, suggesting a compounding disadvantage at the intersection of both characteristics. Single-attribute bias analysis would understate the actual risk.
+## Gender x Age
 
----
+A gender × age group approval rate matrix revealed that the lowest approval rates are concentrated among **young female applicants (18–35)**, suggesting a compounding disadvantage at the intersection of both characteristics. The largest gender gap occurs in the **26–35 group (21.9% difference)**, while both genders face significant age-based disadvantage in the 18–25 group. Single-attribute bias analysis would understate the actual risk.
+
+### Gender × Income Level Interaction
+
+Since financial variables were found to be non-significant gender proxies, a further test examined whether men and women at the **same income level** are approved at the same rate. Applicants were split into three equal income bands (low, mid, high) and approval rates compared by gender within each band.
+
+| Income Level | Male Approval Rate | Female Approval Rate | Gap |
+|---|---|---|---|
+| Low income | ~53.6% | ~35.4% | ~18.2pp |
+| Mid income | ~64.1% | ~52.5% | ~11.6pp |
+| High income | ~72.5% | ~62.7% | ~9.8pp |
+
+The gender gap **persists across all income levels**. Even when women earn the same amount as men, their approval rate is still lower. This confirms that the discrimination **cannot be explained by income differences** and is consistent with direct gender bias in NovaCred's lending model.
+
 
 ## Privacy Assessment
 
@@ -352,3 +365,4 @@ Run notebooks in sequence — each depends on outputs from the previous:
 
 
 
+*DEGO 2606 | MSc Business Analytics | Nova SBE | Team 9 – TXA |
