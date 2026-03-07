@@ -27,7 +27,7 @@ Our analysis of **502 raw credit applications** uncovered significant issues acr
 **Bottom line:** NovaCred's data pipeline contains material data quality, fairness, and regulatory compliance failures that require immediate remediation before the system can be considered fit for regulated use.
 
 ## Repository Structure
-
+```
 dego-project-team9/
 ├── README.md
 ├── data/
@@ -41,9 +41,9 @@ dego-project-team9/
 ├── notebooks/
 │   ├── 01-data-quality.ipynb
 │   ├── 02-bias-analysis.ipynb
-│   └── 03-privacy-demo.ipynb
+│   └── 03-privacy-demo.ipynb 
 └── presentation/
-
+```
 
 ## Team & Roles 
 | Role | Name | Primary Contribution |
@@ -349,3 +349,6 @@ Run notebooks in sequence — each depends on outputs from the previous:
 - All notebooks run without errors from top to bottom
 - The cleaning pipeline in `01-data-quality.ipynb` is fully deterministic — the same input always produces the same output
 - No external data sources are used; only the provided `raw_credit_applications.json`
+
+
+
