@@ -18,18 +18,18 @@ NovaCred is a fintech startup that uses machine learning to automate credit deci
 
 Our analysis of **502 raw credit applications** uncovered significant issues across three dimensions:
 
-- **Data Quality:** 13 distinct quality issues were identified and quantified, spanning all five data quality dimensions — completeness, consistency, validity, uniqueness, and timeliness. 500 of 502 records were retained after cleaning, with issues flagged transparently rather than silently removed.
+- **Data Quality:** 13 distinct quality issues were identified and quantified, spanning all five data quality dimensions (completeness, consistency, validity, uniqueness, and timeliness). 500 of 502 records were retained after cleaning, with issues flagged transparently rather than silently removed.
 
-- **Algorithmic Bias:** A **Disparate Impact ratio of 0.77** was found for gender — below the 0.8 legal threshold (four-fifths rule) — indicating statistically significant disadvantage for female applicants. Age-based patterns were also identified, with applicants under 35 showing notably lower approval rates. Income and credit history were flagged as likely **proxy variables** for both gender and age.
+- **Algorithmic Bias:** A **Disparate Impact ratio of 0.77** was found for gender which is below the 0.8 legal threshold (four-fifths rule), indicating statistically significant disadvantage for female applicants. Age-based patterns were also identified, with applicants under 35 showing notably lower approval rates. Income and credit history were flagged as likely **proxy variables** for both gender and age.
 
-- **Privacy & Governance:** Four direct identifiers (full name, email, SSN, IP address) are stored in plain text with no protection. Critical GDPR governance fields — including consent timestamps, retention periods, processing purpose, and data source — are entirely absent. The system qualifies as a **High-Risk AI system** under the EU AI Act (credit scoring), triggering strict obligations that are currently unmet.
+- **Privacy & Governance:** Four direct identifiers (full name, email, SSN, IP address) are stored in plain text with no protection. Critical GDPR governance fields like including consent timestamps, retention periods, processing purpose, and data source are entirely absent. The system qualifies as a **High-Risk AI system** under the EU AI Act (credit scoring), triggering strict obligations that are currently unmet.
 
 **Bottom line:** NovaCred's data pipeline contains material data quality, fairness, and regulatory compliance failures that require immediate remediation before the system can be considered fit for regulated use.
 
 ## Repository Structure
 
 dego-project-team9/
-├── README.md                        # This file — executive summary and findings
+├── README.md
 ├── data/
 │   ├── raw/
 │   │   └── raw_credit_applications.json
@@ -42,9 +42,8 @@ dego-project-team9/
 │   ├── 01-data-quality.ipynb
 │   ├── 02-bias-analysis.ipynb
 │   └── 03-privacy-demo.ipynb
-├── presentation/                    # Video file or link
-├── reports/                         # Additional report outputs
-└── src/                             # Reusable utility code
+├── presentation/    
+
 
 ## Team & Roles 
 | Role | Name | Primary Contribution |
@@ -94,7 +93,7 @@ All 500 final records are retained. Rather than silently dropping rows, original
 - `app_001`: Kept row 383 (complete record); dropped row 455 (`notes = DUPLICATE_ENTRY_ERROR`, missing SSN/IP/DOB/ZIP/gender)
 - `app_042`: Kept row 354 (`notes = RESUBMISSION`, corrected submission); dropped row 8
 
-**Duplicate SSN handling:** Three SSN pairs were found. One pair corresponds to the `app_001` duplicate (resolved above). The other two pairs appear under different applicant names and IDs — these may indicate **identity fraud or data entry errors** and were **retained and flagged** for case-by-case investigation rather than silently deleted.
+**Duplicate SSN handling:** Three SSN pairs were found. One pair corresponds to the `app_001` duplicate (resolved above). The other two pairs appear under different applicant names and IDs which may indicate **identity fraud or data entry errors** and were **retained and flagged** for case-by-case investigation rather than silently deleted.
 
 #### Completeness
 
@@ -183,7 +182,7 @@ A DI ratio of 0.77 falls below the 0.8 threshold of the four-fifths rule, indica
 | 46–55 | Above average |
 | 56–65 | Above average |
 
-The most pronounced gap occurs between the 26–35 and 36–45 groups. Using 35 as the cutoff, the approval rate jumps from ~52% (≤35) to ~68% (>35). The age DI ratio passes the four-fifths rule, but a chi-square test confirmed the relationship is **statistically significant** — warranting active monitoring.
+The most pronounced gap occurs between the 26–35 and 36–45 groups. Using 35 as the cutoff, the approval rate jumps from ~52% (≤35) to ~68% (>35). The age DI ratio passes the four-fifths rule, but a chi-square test confirmed the relationship is **statistically significant**, meaning it needs active monitoring.
 
 ### 3. Proxy Variable Analysis
 
@@ -201,7 +200,7 @@ A gender × age group approval rate matrix revealed that the lowest approval rat
 
 > **Notebook:** `03-privacy-demo.ipynb`
 
-### Direct Identifiers — stored in plain text
+### Direct PII Identifiers — stored in plain text
 
 | Field | Risk |
 |-------|------|
@@ -210,7 +209,7 @@ A gender × age group approval rate matrix revealed that the lowest approval rat
 | `ssn` | National unique identifier |
 | `ip_address` | Linkable to an individual via ISP |
 
-### Quasi-Identifiers — Re-identification Risk
+### Quasi-Identifiers (Indirect PII) — Re-identification Risk
 
 | Combination | Unique Individuals | Risk Level |
 |-------------|-------------------|------------|
@@ -222,15 +221,15 @@ A gender × age group approval rate matrix revealed that the lowest approval rat
 | `zip + gender` | 181 / 502 | High |
 | `dob + zip + gender` | **499 / 502** | Critical |
 
-Using only three quasi-identifiers, **99.4% of applicants can be uniquely re-identified** — without access to any direct identifiers.
+Using only three quasi-identifiers, **99.4% of applicants can be uniquely re-identified** without access to any direct identifiers.
 
-### Pseudonymization Demonstration
+### Pseudonymization Demonstration - Privacy protection
 
 SHA-256 hashing was applied to `full_name`, `email`, `ssn`, and `ip_address`.
 
-**Vulnerability identified:** Deterministic hashing without a salt is reversible via brute force. An attacker who knows the input space (e.g., IP address ranges) can reproduce the exact hash and recover the original value — demonstrated in the notebook.
+**Vulnerability identified:** Deterministic hashing without a salt is reversible via brute force. An attacker who knows the input space (e.g., IP address ranges) can reproduce the exact hash and recover the original value where we demonstrated in the notebook.
 
-**Fix applied:** Salted hashing using `secrets.token_hex(16)`. The salt is generated per-record, stored separately, and prepended before hashing — making reversal computationally infeasible.
+**Fix applied:** Salted hashing using `secrets.token_hex(16)`. The salt is generated per-record, stored separately, and prepended before hashing. This makes reversal computationally infeasible.
 
 ---
 
