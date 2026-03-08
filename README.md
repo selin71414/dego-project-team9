@@ -43,6 +43,8 @@ dego-project-team9/
 │   ├── 02-bias-analysis.ipynb
 │   └── 03-privacy-demo.ipynb 
 └── presentation/
+│   ├── dego-project-team9-ppt.pptx
+│   ├── presentation/video.mp4
 ```
 
 ## Team & Roles 
