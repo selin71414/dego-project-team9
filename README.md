@@ -205,8 +205,7 @@ Since financial variables were found to be non-significant gender proxies, a fur
 | Mid income | ~64.1% | ~52.5% | ~11.6pp |
 | High income | ~72.5% | ~62.7% | ~9.8pp |
 
-The gender gap **persists across all income levels**. Even when women earn the same amount as men, their approval rate is still lower. This confirms that the discrimination **cannot be explained by income differences** and is consistent with direct gender bias in NovaCred's lending model.
-
+The gender gap **persists across all income levels** (p = 0.001), confirming the interaction is statistically significant. Even when women earn the same amount as men, their approval rate is still lower. This confirms that the discrimination *cannot be explained by income differences* and is consistent with direct gender bias in NovaCred's lending model.
 
 ## Privacy Assessment
 
