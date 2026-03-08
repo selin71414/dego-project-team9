@@ -75,7 +75,7 @@ dego-project-team9/
 
 ### Cleaning Strategy: Flag & Retain
 
-All 500 final records are retained. Rather than silently dropping rows, original values are preserved and quality issues are recorded as boolean `flag_` columns. Cleaned values are stored with a `_clean` suffix. This approach supports both audit trails and flexible downstream filtering.
+500/502 final records are retained. Rather than silently dropping rows, original values are preserved and quality issues are recorded as boolean `flag_` columns. Cleaned values are stored with a `_clean` suffix. This approach supports both audit trails and flexible downstream filtering.
 
 > [!IMPORTANT]
 > **34.2% (171 records)** carry at least one quality flag. These records require downstream attention (filtering or manual review) before use in risk modeling. All original values are preserved alongside cleaned fields and audit flags to maintain a 100% verifiable trail.
@@ -100,7 +100,6 @@ All 500 final records are retained. Rather than silently dropping rows, original
 | Field | Missing / Blank |
 |-------|----------------|
 | `processing_timestamp` | ~88% of records — **critical audit trail gap** |
-| `loan_purpose` | ~90% of records |
 | `ssn`, `date_of_birth`, `ip_address`, `annual_income` | ~5 records each |
 | `gender` | 3 records |
 | `zip_code` | 2 records |
@@ -111,20 +110,20 @@ All 500 final records are retained. Rather than silently dropping rows, original
 
 | Issue | Records Affected |
 |-------|-----------------|
-| `gender` encoded inconsistently (M / Male / F / Female / blank) | 153 records |
+| `gender` encoded inconsistently (M / Male / F / Female / blank) | 114 records |
 | `date_of_birth` in mixed formats (ISO, DD/MM/YYYY, YYYY/MM/DD) | 157 records |
-| `annual_income` stored as string instead of numeric | 10 records |
-| Credit history implies start before age 18 | 12 records |
+| `annual_income` stored as string instead of numeric | 8 records |
+| Credit history implies start before age 18 | 1 records |
 
 #### Validity
 
 | Issue | Records Affected |
 |-------|-----------------|
-| `annual_income == 0` | 3 records |
+| `annual_income == 0` | 1 records |
 | `credit_history_months < 0` (values: −10, −3) | 2 records |
-| `debt_to_income > 1` | 4 records |
+| `debt_to_income > 1` | 1 records |
 | `savings_balance < 0` (value: −5,000) | 1 record |
-| Invalid email format | 8 records |
+| Invalid email format | 4 records |
 
 #### Timeliness
 
